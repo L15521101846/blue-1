@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/chat_time"
+        android:gravity="center"
+        android:layout_margin="5dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="这里是显示的信息"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/chat_input"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:padding="20dp"
+                android:background="@mipmap/bubbleright_2x"
+                android:textSize="18sp"
+                android:textAlignment="viewStart" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/chat_person"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/portrait2_2x" />
+
+    </LinearLayout>
+</LinearLayout>

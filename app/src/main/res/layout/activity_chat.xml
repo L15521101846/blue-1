@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </include>
+    <!--聊天内容显示区域-->
+    <ListView
+        android:id="@+id/message_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@mipmap/chat_bg"
+        android:divider="@null"
+        android:listSelector="#eee" />
+
+    <!--为了美观，增加一条分割线-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="5dp"
+        android:background="#000" />
+
+    <!--编辑文字及发送按钮区域-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="5dp"
+            android:layout_height="40dp" />
+
+        <!--<ImageView-->
+        <!--android:layout_height="40dp"-->
+        <!--android:src="@mipmap/send_2x"-->
+        <!--android:id="@+id/receive"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:onClick="receive"-->
+        <!--/>-->
+
+        <TextView
+            android:layout_width="5dp"
+            android:layout_height="40dp" />
+
+
+        <EditText
+            android:id="@+id/msg_edt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edt"
+            android:hint="说点什么..."
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:layout_width="5dp"
+            android:layout_height="40dp" />
+
+        <ImageButton
+            android:id="@+id/emotion"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:background="@mipmap/emoticon_2x"
+            android:onClick="emotion" />
+
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="40dp" />
+
+        <ImageButton
+            android:id="@+id/send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:background="@mipmap/add_2x"
+            android:onClick="send" />
+
+        <TextView
+            android:layout_width="5dp"
+            android:layout_height="40dp" />
+
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/chat_emotion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:numColumns="5"
+        android:visibility="gone" />
+
+    <GridView
+        android:id="@+id/chat_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:numColumns="4"
+        android:visibility="gone" />
+
+
+</LinearLayout>
+

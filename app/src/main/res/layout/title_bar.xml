@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@mipmap/toolbar_2x"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/chat_back"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_marginLeft="5dp"
+        android:onClick="Chat_back"
+        android:src="@mipmap/back_icon_2x" />
+
+    <TextView
+        android:id="@+id/chat_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Chatting"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/friend_detail"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_marginRight="5dp"
+        android:onClick="friend"
+        android:src="@mipmap/friend_detail" />
+</LinearLayout>

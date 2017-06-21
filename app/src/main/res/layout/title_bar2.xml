@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@mipmap/toolbar_2x"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/search_back"
+        android:layout_width="30dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="10sp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/back_icon_2x" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|right"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="搜索"
+            android:textColor="#4a4a4a"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="创建"
+            android:textColor="#4a4a4a"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>
