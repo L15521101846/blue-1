@@ -56,7 +56,6 @@ public class Game extends Activity {
         setContentView(R.layout.activity_game);
         socket = (Socket) getIntent().getSerializableExtra(SER_KEY);
         setLayout();
-
     }
 
     private void setLayout() {
@@ -74,39 +73,39 @@ public class Game extends Activity {
 
         mGridView.setAdapter(mChessAdapter);
         handler = new Handler();
-//        /*
-//        * 接收信息的线程
-//        * */
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    try {
-//                        String str = socket.Chat_receive();
-//                        if (str.equals("newGame")) {
-//                            newGame(getWindow().getDecorView());
-//                        }
-//                        if (str.equals("backGame")) {
-//                            backChess();
-//                        } else {
-//                            int from, to;
-//                            String s[] = str.split(",");
-//                            from = Integer.parseInt(s[0]);
-//                            to = Integer.parseInt(s[1]);
-//                            chessChange(from, to);
-//                        }
-//                        /*
-//                        * 收到悔棋或者敌人走棋的信息，本人不能点击悔棋，可以走棋
-//                        * */
-//                        clickN = -1;
-//                        each = true;
-//                        handler.post(runnableUi);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
+        /*
+        * 接收信息的线程
+        * */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        String str = socket.Chat_receive();
+                        if (str.equals("newGame")) {
+                            newGame(getWindow().getDecorView());
+                        }
+                        if (str.equals("backGame")) {
+                            backChess();
+                        } else {
+                            int from, to;
+                            String s[] = str.split(",");
+                            from = Integer.parseInt(s[0]);
+                            to = Integer.parseInt(s[1]);
+                            chessChange(from, to);
+                        }
+                        /*
+                        * 收到悔棋或者敌人走棋的信息，本人不能点击悔棋，可以走棋
+                        * */
+                        clickN = -1;
+                        each = true;
+                        handler.post(runnableUi);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
 
         mGridView.setOnChangeListener(new DragGridView.OnChangeListener() {
             @Override

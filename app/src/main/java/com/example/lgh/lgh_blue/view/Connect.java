@@ -64,7 +64,6 @@ public class Connect extends Activity {
                     Device.add(device);
                     mDeviceadapter = new DeviceAdapter(Connect.this, R.layout.device_item, Device_name);
                     mNearList.setAdapter(mDeviceadapter);
-
                 }
             }
         }
@@ -87,11 +86,8 @@ public class Connect extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 adapter.cancelDiscovery();
                 device = Device.get(position);
-
                 int connetTime = 0;
                 boolean connecting = true;
-
-
                 boolean connected = false;
                 initSocket();
                 while (!connected && connetTime <= 5) {
@@ -114,7 +110,6 @@ public class Connect extends Activity {
                     }
                 }
             }
-
         });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,9 +199,6 @@ public class Connect extends Activity {
             mFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
             mFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
             // 注册广播接收器，接收并处理搜索结果
-
-
-
             if (Build.VERSION.SDK_INT >= 23) {
                 //校验是否已具有模糊定位权限
                 if (ContextCompat.checkSelfPermission(Connect.this,
@@ -237,7 +229,6 @@ public class Connect extends Activity {
                 }
             }
         }
-
     }
 
 
