@@ -132,7 +132,7 @@ public class DragGridView extends GridView{
         @Override
         public void run() {
             isDrag = true; //设置可以拖拽
-            mVibrator.vibrate(22); //震动一下
+            //mVibrator.vibrate(22); //震动一下
             mStartDragItemView.setVisibility(View.INVISIBLE);//隐藏该item
 
             //根据我们按下的点显示item镜像

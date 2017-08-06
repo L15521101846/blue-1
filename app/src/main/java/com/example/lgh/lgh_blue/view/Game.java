@@ -69,6 +69,7 @@ public class Game extends Activity {
         * 初始化棋盘适配器，绑定棋盘的GridView布局
         * */
         mGridView = (DragGridView) findViewById(R.id.game_chess);
+
         mChessAdapter = new ChessAdapter(getLayoutInflater(), mmChess);
 
         mGridView.setAdapter(mChessAdapter);
