@@ -185,11 +185,15 @@ public class Connect extends Activity {
         // 打开蓝牙
         if (!adapter.isEnabled())
         {
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            // Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             // 设置蓝牙可见性，最多300秒
-            intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            // intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            // startActivity(intent);
+            //启动修改蓝牙可见性的Intent
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            //设置蓝牙可见性的时间，方法本身规定最多可见300秒
+            intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3000);
             startActivity(intent);
-
         }
         if(adapter.isEnabled()){
             IntentFilter mFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND );
