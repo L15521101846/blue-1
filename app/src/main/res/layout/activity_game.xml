@@ -84,14 +84,15 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:layout_marginBottom="10sp">
+
             <ImageView
+                android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/new_2x"
-                android:id="@+id/imageButton"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                />
+                android:src="@mipmap/new_2x"
+                android:visibility="invisible" />
             <!--android:onClick="newGame"-->
             <ImageView
                 android:id="@+id/imageButton2"
@@ -100,7 +101,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:onClick="backGame"
-                android:src="@mipmap/undo_2x" />
+                android:src="@mipmap/undo_2x"
+                android:visibility="invisible" />
 
             <ImageView
                 android:layout_width="wrap_content"

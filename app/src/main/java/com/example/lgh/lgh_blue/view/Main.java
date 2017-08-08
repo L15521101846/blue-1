@@ -42,7 +42,7 @@ public class Main extends Activity {
     }
 
     public void Me(View view) {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.setClass(Main.this,Connect.class);
         startActivity(intent);
     }
