@@ -46,7 +46,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@mipmap/add_2x"/>
+            android:background="@mipmap/portrait2_2x"/>
 
     </LinearLayout>
 </LinearLayout>
