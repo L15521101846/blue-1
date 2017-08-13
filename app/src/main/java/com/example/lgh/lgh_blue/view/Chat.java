@@ -2,6 +2,7 @@ package com.example.lgh.lgh_blue.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.lgh.lgh_blue.R;
 import com.example.lgh.lgh_blue.model.ExpressionAdapter;
@@ -67,6 +70,10 @@ public class Chat extends Activity {
         setContentView(R.layout.activity_chat);
         setLayout();
     }
+    public boolean onKeyDown(int keyCode,KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK) return  true;
+        return super.onKeyDown(keyCode,event);
+    }
     private void setLayout(){
         sd=(ImageButton)findViewById(R.id.send);
         emt=(ImageButton)findViewById(R.id.emotion);
@@ -74,6 +81,7 @@ public class Chat extends Activity {
         mListView=(ListView)findViewById(R.id.message_list);
         mGridView=(GridView)findViewById(R.id.chat_emotion);
         socket = (Socket)getIntent().getSerializableExtra(SER_KEY);
+        Toast.makeText(Chat.this.getWindow().getContext(),""+socket.isConnected(),Toast.LENGTH_SHORT).show();
         handler= new Handler();
         mInputMethodManager=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         //开一个接收信息的线程
@@ -83,10 +91,22 @@ public class Chat extends Activity {
                 while(true) {
                     try {
                         String Receive = socket.Chat_receive();
-                        socket_receive(Receive);
-                        handler.post(runnableUi);
+                        if (Receive.equals("close it now")){
+                            if (socket.isConnected())
+                                socket.close();
+                            Intent intent = new Intent();
+                            intent.setClass(Chat.this, Main.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            socket_receive(Receive);
+                            handler.post(runnableUi);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Intent intent = new Intent();
+                        intent.setClass(Chat.this, Main.class);
+                        startActivity(intent);
                     }
                 }
             }
@@ -260,7 +280,6 @@ public class Chat extends Activity {
            // Log.e("有问题","有问题");
         }
         msg.setText("");
-
     }
 
     public void emotion(View view) {
@@ -289,8 +308,17 @@ public class Chat extends Activity {
         mInputMethodManager.hideSoftInputFromWindow(msg.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    public void Chat_back(View view) {
-        socket=null;
-        finish();
+    public void Chat_back(View view) throws IOException {
+        socket.Chat_Sent("close it now");
+        try {
+            Thread.sleep(100);//线程沉睡一定时间
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (socket.isConnected())
+        socket.close();
+        Intent intent =new Intent();
+        intent.setClass(Chat.this,Main.class);
+        startActivity(intent);
     }
 }

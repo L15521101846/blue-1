@@ -78,4 +78,7 @@ public class Socket implements Serializable {
     public void close() throws IOException {
         bluetoothSocket.close();
     }
+    public boolean isConnected(){
+        return bluetoothSocket.isConnected();
+    }
 }

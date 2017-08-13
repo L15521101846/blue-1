@@ -9,7 +9,7 @@
         android:id="@+id/title_bar"
         layout="@layout/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="78sp">
 
 
     </include>
@@ -19,9 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@mipmap/chat_bg"
+        android:background="#fffaf0"
         android:divider="@null"
-        android:listSelector="#eee" />
+        android:listSelector="#fffaf0" />
 
     <!--为了美观，增加一条分割线-->
     <View
@@ -41,7 +41,7 @@
 
         <TextView
             android:layout_width="5dp"
-            android:layout_height="40dp" />
+            android:layout_height="match_parent" />
 
         <!--<ImageView-->
         <!--android:layout_height="40dp"-->
@@ -54,7 +54,7 @@
 
         <TextView
             android:layout_width="5dp"
-            android:layout_height="40dp" />
+            android:layout_height="match_parent" />
 
 
         <EditText
@@ -65,11 +65,13 @@
             android:layout_weight="1"
             android:background="@drawable/bg_edt"
             android:hint="说点什么..."
-            android:paddingLeft="5dp" />
+            android:paddingBottom="2dp"
+            android:paddingLeft="10sp"
+            android:paddingTop="2dp" />
 
         <TextView
             android:layout_width="5dp"
-            android:layout_height="40dp" />
+            android:layout_height="match_parent" />
 
         <ImageButton
             android:id="@+id/emotion"
@@ -81,7 +83,7 @@
 
         <TextView
             android:layout_width="10dp"
-            android:layout_height="40dp" />
+            android:layout_height="match_parent" />
 
         <ImageButton
             android:id="@+id/send"
@@ -93,7 +95,7 @@
 
         <TextView
             android:layout_width="5dp"
-            android:layout_height="40dp" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -103,6 +105,7 @@
         android:layout_height="wrap_content"
         android:background="#fff"
         android:numColumns="5"
+        android:listSelector="#fff"
         android:visibility="gone" />
 
     <GridView
@@ -111,6 +114,7 @@
         android:layout_height="wrap_content"
         android:background="#fff"
         android:numColumns="4"
+        android:listSelector="#fff"
         android:visibility="gone" />
 
 

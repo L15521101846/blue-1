@@ -48,12 +48,12 @@
                     android:text="nihao"/>
 
                     <ImageView
-                        android:id="@+id/connecting"
+                        android:id="@+id/connectMes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:src="@mipmap/connecting_2x"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
             </LinearLayout>
 
 

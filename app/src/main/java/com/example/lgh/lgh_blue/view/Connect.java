@@ -3,8 +3,8 @@ package com.example.lgh.lgh_blue.view;
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,9 +17,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lgh.lgh_blue.R;
 import com.example.lgh.lgh_blue.model.DeviceAdapter;
@@ -30,7 +30,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Connect extends Activity {
     private BluetoothAdapter adapter;
@@ -38,17 +37,15 @@ public class Connect extends Activity {
     private BluetoothSocket socket;
     private ListView mMatchedList;//已匹配设备
     private ListView mNearList;//可匹配设备
-    private TextView mOpen;//打开蓝牙
-    private ImageView back;
-    private boolean JiantTing;//监听
-    private List<String> Device_name = new ArrayList<String>();//放可用设备的名字
-    private List<BluetoothDevice> Device = new ArrayList<BluetoothDevice>();//放可用设备
-    private List<String> Device_name2 = new ArrayList<String>();//放已配对设备的名字
-    private Set<BluetoothDevice> Devices;//放已配对设备
-    private DeviceAdapter mDeviceadapter;
-    private DeviceAdapter mDeviceadapter2;
-    private TextView search,connect;//搜索、连接
+    private List<String> Device_Near_name = new ArrayList<String>();//放可用设备的名字
+    private List<BluetoothDevice> Device_near = new ArrayList<BluetoothDevice>();//放附近可用设备
+    private List<BluetoothDevice> Device_match = new ArrayList<BluetoothDevice>();//放匹配可用设备
+    private List<String> Device_Match_name = new ArrayList<String>();//放已配对设备的名字
 
+    private DeviceAdapter mDeviceadapter_Near;
+    private DeviceAdapter mDeviceadapter_Match;
+    private TextView search;//搜索、连接
+    private String toWhat;//跳转到的页面
     private static  final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION  = 100;
     public  final static String SER_KEY = "com.example.lgh.lgh_blue.presenter.Socket";
     private BroadcastReceiver receiver  = new BroadcastReceiver() {
@@ -58,18 +55,31 @@ public class Connect extends Activity {
             System.out.println(action);
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if(device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART);
                 //搜索到的蓝牙设备加入到一个list中
-                if(device.getName()!=null){
-                    Device_name.add(device.getName());
-                    Device.add(device);
-                    mDeviceadapter = new DeviceAdapter(Connect.this, R.layout.device_item, Device_name);
-                    mNearList.setAdapter(mDeviceadapter);
+                if(device.getName()!=null && device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART){
+                    if(device.getBondState() == BluetoothDevice.BOND_BONDED){
+                        if (!Device_Match_name.contains(device.getName())){
+                            Device_Match_name.add(device.getName());
+                            Device_match.add(device);
+                            mDeviceadapter_Match = new DeviceAdapter(Connect.this,R.layout.device_item,Device_Match_name);
+                            mMatchedList.setAdapter(mDeviceadapter_Match);
+                        }
+                    }else{
+                        if (!Device_Near_name.contains(device.getName())){
+                            Device_Near_name.add(device.getName());
+                            Device_near.add(device);
+                            mDeviceadapter_Near = new DeviceAdapter(Connect.this, R.layout.device_item, Device_Near_name);
+                            mNearList.setAdapter(mDeviceadapter_Near);
+                        }
+                    }
                 }
             }
         }
     };
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void  onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
         initView();
@@ -78,22 +88,34 @@ public class Connect extends Activity {
     private void initView(){
         mMatchedList=(ListView)findViewById(R.id.matched_list);
         mNearList=(ListView)findViewById(R.id.near_list);
-        back=(ImageView)findViewById(R.id.search_back);
-        adapter = BluetoothAdapter.getDefaultAdapter();
-        JiantTing=false;
-        mNearList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter = BluetoothAdapter.getDefaultAdapter();//获得本设备的蓝牙适配器实例
+        Intent intent =getIntent();
+        toWhat = intent.getStringExtra("toWhat");
+        mMatchedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                adapter.cancelDiscovery();
-                device = Device.get(position);
+                adapter.cancelDiscovery();//停止搜索
+                device = Device_match.get(position);
                 int connetTime = 0;
-                boolean connecting = true;
                 boolean connected = false;
                 initSocket();
                 while (!connected && connetTime <= 5) {
                     try {
                         socket.connect();
                         connected = true;
+                        if (socket.isConnected()) {
+                            Intent intent;
+                            if (toWhat.equals("Chat"))
+                                intent = new Intent(Connect.this, Chat.class);
+                            else
+                                intent = new Intent(Connect.this, Game.class);
+                            Socket s = new Socket(socket);
+                            Bundle mBundle = new Bundle();
+                            mBundle.putSerializable(SER_KEY, s);
+                            intent.putExtras(mBundle);
+                            startActivity(intent);
+                            finish();
+                        }
                     } catch (IOException e1) {
                         connetTime++;
                         connected = false;
@@ -103,60 +125,42 @@ public class Connect extends Activity {
                             socket = null;
                         } catch (IOException e2) {
                             //TODO: handle exception
-
                         }
                     } finally {
-                        connecting = false;
                     }
                 }
             }
         });
-        back.setOnClickListener(new View.OnClickListener() {
+        mNearList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Connect.this,Main.class);
-                Socket s = new Socket(socket);
-                Bundle mBundle = new Bundle();
-                mBundle.putSerializable(SER_KEY,s);
-                intent.putExtras(mBundle);
-                startActivity(intent);
-                finish();
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                try {
+                    // 连接建立之前的先配对
+                    adapter.cancelDiscovery();//停止搜索
+                    device = Device_near.get(position);
+                    if (device.getBondState() == BluetoothDevice.BOND_NONE) {
+                        Method creMethod = BluetoothDevice.class
+                                .getMethod("createBond");
+                        Toast.makeText(view.getContext(),"配对中...",Toast.LENGTH_SHORT).show();
+                        creMethod.invoke(device);
+                    } else {
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    Toast.makeText(view.getContext(),"无法匹配！",Toast.LENGTH_SHORT).show();
+                    //DisplayMessage("无法配对！");
+                    e.printStackTrace();
+                }
             }
         });
         search=(TextView)findViewById(R.id.search);
-        connect=(TextView)findViewById(R.id.connect);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                peidui(view);
-            }
-        });
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lianjie(view);
+                searchBlueDevice(view);
             }
         });
     }
-    private void waitconnect() throws IOException {
-
-        Method listenMethod = null;
-        try {
-            listenMethod = adapter.getClass().getMethod("listenUsingRfcommOn", new Class[]{int.class});
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        BluetoothServerSocket mmServerSocket = null;
-        try {
-            mmServerSocket = (BluetoothServerSocket) listenMethod.invoke(adapter, Integer.valueOf(29));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        socket = mmServerSocket.accept();
-    }
-
     private void initSocket() {
         BluetoothSocket temp = null;
         try {
@@ -178,23 +182,7 @@ public class Connect extends Activity {
     }
 
 
-    public void peidui(View view) {
-        if (adapter == null)
-        {
-        }
-        // 打开蓝牙
-        if (!adapter.isEnabled())
-        {
-            // Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            // 设置蓝牙可见性，最多300秒
-            // intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            // startActivity(intent);
-            //启动修改蓝牙可见性的Intent
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            //设置蓝牙可见性的时间，方法本身规定最多可见300秒
-            intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3000);
-            startActivity(intent);
-        }
+    public void searchBlueDevice(View view) {
         if(adapter.isEnabled()){
             IntentFilter mFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND );
             mFilter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -219,50 +207,11 @@ public class Connect extends Activity {
                 //系统不高于6.0直接执行
                 adapter.startDiscovery();
             }
-            Device_name.clear();
+            Device_near.clear();
+            Device_Near_name.clear();
+            Device_match.clear();
+            Device_Match_name.clear();
             registerReceiver(receiver,mFilter);
-            //查找已经配对的设备，加载到Matched列表中
-            Devices=adapter.getBondedDevices();
-            if (Devices.size()>0){
-                for (BluetoothDevice bluetoothDevice:Devices){
-                        if (!Device_name2.contains(bluetoothDevice.getName()))
-                            Device_name2.add(bluetoothDevice.getName());
-                        //Toast.makeText(Connect.this,device.getName(),Toast.LENGTH_SHORT).show();
-                        mDeviceadapter2 = new DeviceAdapter(Connect.this,R.layout.device_item, Device_name2);
-                        mMatchedList.setAdapter(mDeviceadapter2);
-                }
-            }
-        }
-    }
-
-
-    public void lianjie(View view) {
-        if (!JiantTing) {
-            //Toast.makeText(Connect.this,"click",Toast.LENGTH_SHORT).show();
-            JiantTing=true;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        waitconnect();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-//            final Timer timer=new Timer();
-//            TimerTask task=new TimerTask() {
-//                int rec=11;
-//                @Override
-//                public void run() {
-//                    rec--;
-//                    if(rec<0){
-//                        timer.cancel();
-//                        JiantTing=false;
-//                    }
-//                }
-//            };
-//            timer.schedule(task,1000,1000);
         }
     }
 }

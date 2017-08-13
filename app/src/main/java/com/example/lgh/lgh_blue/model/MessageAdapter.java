@@ -92,14 +92,16 @@ public class MessageAdapter extends BaseAdapter {
         if (position!=0){
             ChatMessage dataBefore=mData.get(position-1);
             long dateDifference=data.getTime()-dataBefore.getTime();
-            if(dateDifference<60000){
-                viewHolder.time.setVisibility(View.GONE);
-            }else{
-                format=new SimpleDateFormat("EEE HH:mm:ss");
-                String time=format.format(new Date(data.getTime()));
+            if (dateDifference < 60000)
+                viewHolder.time.setVisibility(View.INVISIBLE);
+            else {
+                viewHolder.time.setVisibility(View.VISIBLE);
+                format = new SimpleDateFormat("EEE HH:mm:ss");
+                String time = format.format(new Date(data.getTime()));
                 viewHolder.time.setText(time);
             }
         }else{
+            viewHolder.time.setVisibility(View.VISIBLE);
             format=new SimpleDateFormat("EEE HH:mm:ss");
             String time=format.format(new Date(data.getTime()));
             viewHolder.time.setText(time);

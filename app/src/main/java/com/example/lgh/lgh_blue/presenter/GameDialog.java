@@ -3,6 +3,7 @@ package com.example.lgh.lgh_blue.presenter;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -34,6 +35,10 @@ public class GameDialog extends Dialog implements View.OnClickListener{
         setContentView(R.layout.dialog_game);
         setCanceledOnTouchOutside(false);
         initView();
+    }
+    public boolean onKeyDown(int keyCode,KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK) return  true;
+        return super.onKeyDown(keyCode,event);
     }
 
     private void initView() {

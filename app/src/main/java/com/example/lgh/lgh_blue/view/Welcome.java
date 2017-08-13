@@ -1,6 +1,7 @@
 package com.example.lgh.lgh_blue.view;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,10 +32,7 @@ public class Welcome extends Activity {
                 public void run() {
                     rec--;
                     if(rec<0){
-                        timer.cancel();
-                        Intent intent = new Intent();
-                        intent.setClass(Welcome.this, Main.class);
-                        startActivity(intent);
+                        Go(Welcome.this.getWindow().getDecorView());
                     }else {
                         t.setText("跳过:"+rec);
                     }
@@ -46,6 +44,9 @@ public class Welcome extends Activity {
 
     public void Go(View view){
         timer.cancel();
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter.isEnabled())
+        adapter.disable();
         Intent intent = new Intent();
         intent.setClass(Welcome.this, Main.class);
         startActivity(intent);

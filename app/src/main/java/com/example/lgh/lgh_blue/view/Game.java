@@ -28,6 +28,7 @@ public class Game extends Activity {
     private GridView mGridView;//显示棋盘的GridView
     private int fromItem = -1;//棋子起始位置
     private int toItem = -1;//棋子目标位置
+    String connectTo;
     private int[] mChess = {R.mipmap.white_car_2x, R.mipmap.white_horse_2x, R.mipmap.white_ele_2x, R.mipmap.white_off_2x,
             R.mipmap.boss1_2x,
             R.mipmap.white_off_2x, R.mipmap.white_ele_2x, R.mipmap.white_horse_2x, R.mipmap.white_car_2x,
@@ -64,8 +65,8 @@ public class Game extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         socket = (Socket) getIntent().getSerializableExtra(SER_KEY);
+        connectTo=getIntent().getStringExtra("connectTo");
         setLayout();
-
     }
     public boolean onKeyDown(int keyCode,KeyEvent event){
      if(keyCode == KeyEvent.KEYCODE_BACK) return  true;
@@ -97,13 +98,10 @@ public class Game extends Activity {
                     try {
                         String str = socket.Chat_receive();
                         if (str.equals("newGame")) {
-                            newGame(getWindow().getDecorView());
+                            //newGame(getWindow().getDecorView());
                         }
                         if (str.equals("backGame")) {
                             backChess();
-                        }
-                        if(str.equals("opponent out")){
-                            closeKetAndExit();
                         }
                         else {
                             int from, to;
@@ -114,7 +112,7 @@ public class Game extends Activity {
                                 Looper.prepare();
                                 chessChange(from, to);
                                 handler.post(runnableUi);
-                                dialog("很遗憾，您输了！", false);
+                                dialog("很遗憾，您输了！");
                                 Looper.loop();
                             }
                             chessChange(from, to);
@@ -174,11 +172,9 @@ public class Game extends Activity {
                         if (mChess[j]==mmChess[fromItem]) moveChessID=j;
                     }
                     if(qzisTure(moveChessID,fromX,fromY,toX,toY)&&fromItem!=toItem){
-                        //Toast.makeText(view.getContext(),fromItem+"至"+toItem+"可行",Toast.LENGTH_SHORT).show();
                         if (each) {
                             if (mmChess[toItem] == R.mipmap.boss1_2x)
-                                //Toast.makeText(view.getContext(),"殿下，您赢啦！",Toast.LENGTH_SHORT).show();
-                                dialog("殿下，您赢啦！",true);
+                                dialog("殿下，您赢啦！");
                                 //
                             chessChange(fromItem, toItem);
 
@@ -398,12 +394,16 @@ public class Game extends Activity {
      * 对弈结束弹窗显示输赢,赢：1，输：0
      * @param
      */
-    public void dialog(String content,boolean winOrFail){
+    private void dialog(String content){
         new GameDialog(Game.this.getWindow().getContext(), R.style.dialog_game, content, new GameDialog.OnCloseListener() {
             @Override
             public void onClick(Dialog dialog, boolean confirm) {
                 if (confirm){
-                    closeKetAndExit();
+                    try {
+                        closeKetAndExit();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     dialog.dismiss();
                 }
             }
@@ -411,39 +411,16 @@ public class Game extends Activity {
     }
 
     /**
-     * 关闭socket，并退出象棋对弈
+     * 关闭socket，并退出象棋对弈,发送send：true，接收send：false
      * @param
      */
-    private void closeKetAndExit(){
-        try {
-            socket.Chat_Sent("opponent out");
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void closeKetAndExit() throws IOException{
+        if (socket.isConnected())
+                socket.close();
         Intent intent =new Intent();
         intent.setClass(Game.this,Main.class);
         startActivity(intent);
     }
-    /*
-    * 重开一局
-    * */
-    public void newGame(View view) {
-//        for (int i = 0; i<mChess.length; i++){
-//            mmChess[i]=mChess[i];
-//        }
-//        before=-1;after=-1;
-//        //发送一个新局的信号
-//        String str="newGame";
-//        try {
-//            socket.Chat_Sent(str);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        each=true;
-
-    }
-
     /*
     * 悔棋
     * */

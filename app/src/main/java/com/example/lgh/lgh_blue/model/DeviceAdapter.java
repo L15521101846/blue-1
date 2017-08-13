@@ -56,6 +56,4 @@ public class DeviceAdapter extends ArrayAdapter {
     private class ViewHolder {
         TextView name;
     }
-
-
 }

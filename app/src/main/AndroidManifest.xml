@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.Main" />
-        <activity android:name=".view.Chat" />
+        <activity android:name=".view.Chat"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".view.Game" />
         <activity android:name=".view.Connect"
 
